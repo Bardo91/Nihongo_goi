@@ -120,7 +120,7 @@ public class VocabularyDbHandler extends SQLiteOpenHelper {
     }
 
     public VocabularyWord randomQuery(){
-        String[] tables = {"family", "colours", "food", "hobbies", "jobs", "desktop", "places"};
+        String[] tables = {"family", "colours", "food", "hobbies", "jobs", "desktop", "places", "verbs", "transport"};
         String randomTable= tables[new Random().nextInt(tables.length)];
         Cursor cursor = myDataBase.rawQuery("select * from "+randomTable+" where rowid = (abs(random()) % (select max(rowid)+1 from family));", null);
 
