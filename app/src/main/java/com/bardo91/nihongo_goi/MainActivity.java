@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         languageSwitch = findViewById(R.id.language_switch);
         languageSwitch.setTextOff("Spanish");
         languageSwitch.setTextOn("Japanese");
+        languageSwitch.setChecked(false);
 
         dbhelper  = new VocabularyDbHandler(getApplicationContext());
         dbhelper.db_delete();
