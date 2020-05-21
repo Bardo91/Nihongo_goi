@@ -13,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class VocabularyDbHandler extends SQLiteOpenHelper {
@@ -120,8 +121,18 @@ public class VocabularyDbHandler extends SQLiteOpenHelper {
     }
 
     public VocabularyWord randomQuery(){
-        String[] tables = {"family", "colours", "food", "hobbies", "jobs", "desktop", "places", "verbs", "transport"};
-        String randomTable= tables[new Random().nextInt(tables.length)];
+        ArrayList<String> tables = new ArrayList<String>();
+        Cursor c = myDataBase.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
+
+        if (c.moveToFirst()) {
+            while ( !c.isAfterLast() ) {
+                tables.add( c.getString( c.getColumnIndex("name")) );
+                c.moveToNext();
+            }
+        }
+
+        //String[] tables = {"family", "colours", "food", "hobbies", "jobs", "desktop", "places", "verbs", "transport"};
+        String randomTable= tables.get(new Random().nextInt(tables.size()));
         Cursor cursor = myDataBase.rawQuery("select * from "+randomTable+" where rowid = (abs(random()) % (select max(rowid)+1 from family));", null);
 
         VocabularyWord word = new VocabularyWord();
