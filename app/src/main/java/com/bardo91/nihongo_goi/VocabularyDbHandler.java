@@ -120,6 +120,42 @@ public class VocabularyDbHandler extends SQLiteOpenHelper {
         }
     }
 
+    ArrayList<String> tableList(){
+        ArrayList<String> tables = new ArrayList<String>();
+        Cursor c = myDataBase.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
+
+        if (c.moveToFirst()) {
+            while ( !c.isAfterLast() ) {
+                String tableName = c.getString( c.getColumnIndex("name"));
+                c.moveToNext();
+                if(tableName.contains("sql") || tableName.contains("metadata")){
+                    continue;
+                }
+                tables.add( tableName);
+            }
+        }
+
+        return tables;
+    }
+
+    public ArrayList<VocabularyWord> getAllTable( String table){
+        ArrayList<VocabularyWord> wordList = new ArrayList<>();
+        Cursor cursor = myDataBase.rawQuery("select * from "+table, null);
+
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                VocabularyWord word = new VocabularyWord();
+                word.setSpanish(cursor.getString(0));
+                word.setJapanese(cursor.getString(1));
+                cursor.moveToNext();
+                wordList.add(word);
+            }
+        }
+        cursor.close();
+
+        return wordList;
+    }
+
     public VocabularyWord randomQuery(){
         ArrayList<String> tables = new ArrayList<String>();
         Cursor c = myDataBase.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
